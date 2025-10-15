@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JavaScript</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+  <style>
+    body {
+      background: radial-gradient(circle at center, #0f172a 0%, #1e1b4b 40%, #000 100%);
+      overflow: hidden;
+    }
+    #fireworksCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 50;
+    }
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeIn 1s ease forwards;
+    }
+    @keyframes fadeIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .button-glow {
+      transition: all 0.3s ease;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    }
+    .button-glow:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 40px rgba(255, 255, 255, 0.8);
+    }
+    .aura {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      opacity: 0.7;
+      mix-blend-mode: screen;
+      animation: pulse 1s infinite ease-in-out alternate;
+    }
+    @keyframes pulse {
+      from { transform: scale(1); opacity: 0.7; }
+      to { transform: scale(1.5); opacity: 0.2; }
+    }
+  </style>
+</head>
+
+<body class="font-sans text-white flex flex-col items-center justify-center min-h-screen relative">
+  <canvas id="fireworksCanvas"></canvas>
+
+  <div class="text-center fade-in">
+    <h1 class="text-5xl font-extrabold mb-4 text-cyan-400 drop-shadow-[0_0_20px_#22d3ee]">Belajar JavaScript</h1>
+  </div>
+
+  <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-6 w-80 text-center mt-5 shadow-2xl fade-in">
+    <h2 class="text-2xl font-bold mb-3 text-yellow-300">Variabel dan Konsol</h2>
+    <button class="bg-green-500 button-glow text-white px-4 py-2 rounded-full font-semibold" onclick="animasiButton(event); contohVariabel();">Coba Cek</button>
+  </div>
+
+  <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-6 w-80 text-center mt-5 shadow-2xl fade-in">
+    <h2 class="text-2xl font-bold mb-3 text-pink-300">Percabangan</h2>
+    <button class="bg-pink-500 button-glow text-white px-4 py-2 rounded-full font-semibold" onclick="animasiButton(event); cekNilai();">Cek Nilai</button>
+  </div>
+
+  <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-6 w-80 text-center mt-5 shadow-2xl fade-in">
+    <h2 class="text-2xl font-bold mb-3 text-indigo-300">Array</h2>
+    <button class="bg-indigo-500 button-glow text-white px-4 py-2 rounded-full font-semibold" onclick="animasiButton(event); tampilArray();">Lihat Array</button>
+  </div>
+
+  <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-6 w-96 text-center mt-8 shadow-2xl fade-in">
+    <h2 class="text-3xl font-bold mb-3 text-yellow-400">Matematika</h2>
+
+    <div class="flex justify-center gap-2 mb-3">
+      <input id="angka1" type="number" placeholder="Angka pertama" class="text-black p-2 rounded-lg w-36 text-center">
+      <input id="angka2" type="number" placeholder="Angka kedua" class="text-black p-2 rounded-lg w-36 text-center">
+    </div>
+
+    <div class="flex justify-center flex-wrap gap-3 mt-3">
+      <button class="bg-cyan-500 button-glow px-4 py-2 rounded-full font-semibold" onclick="animasiButton(event); hitung('tambah');">Tambah</button>
+      <button class="bg-red-500 button-glow px-4 py-2 rounded-full font-semibold" onclick="animasiButton(event); hitung('kurang');">Kurang</button>
+      <button class="bg-yellow-500 button-glow px-4 py-2 rounded-full font-semibold" onclick="animasiButton(event); hitung('kali');">Kali</button>
+      <button class="bg-purple-500 button-glow px-4 py-2 rounded-full font-semibold" onclick="animasiButton(event); hitung('bagi');">Bagi</button>
+    </div>
+
+    <div id="hasil" class="mt-5 text-2xl font-bold text-cyan-300"></div>
+  </div>
+
+  <div class="text-center mt-10 fade-in">
+    <h2 class="text-2xl font-bold mb-3">Animasi Bundar</h2>
+    <div id="circle" class="w-20 h-20 bg-indigo-500 rounded-full transition-all duration-700 mx-auto"></div>
+    <button id="circleButton" class="mt-3 bg-green-500 button-glow text-white px-4 py-2 rounded-full font-semibold" onclick="animasiButton(event); animateCircle();">Gerakkan Lingkaran</button>
+  </div>
+
+  <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-6 w-80 text-center mt-5 shadow-2xl fade-in">
+    <h2 class="text-2xl font-bold mb-3 text-green-300">Count App</h2>
+    <div id="counter" class="text-3xl font-bold mb-3">0</div>
+    <div class="flex justify-center gap-3">
+      <button class="bg-green-500 button-glow px-4 py-2 rounded-full font-semibold" onclick="animasiButton(event); updateCounter('tambah')">Tambah</button>
+      <button class="bg-red-500 button-glow px-4 py-2 rounded-full font-semibold" onclick="animasiButton(event); updateCounter('kurang')">Kurang</button>
+    </div>
+  </div>
+
+  <script>
+    anime({
+      targets: ".fade-in",
+      opacity: [0, 1],
+      translateY: [40, 0],
+      delay: anime.stagger(300),
+      duration: 1200,
+      easing: "easeOutElastic(1, .5)"
+    })
+
+    const canvas = document.getElementById("fireworksCanvas")
+    const ctx = canvas.getContext("2d")
+    let particles = []
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
+    }
+    window.addEventListener("resize", resizeCanvas)
+    resizeCanvas()
+
+    function createFirework(x, y, color) {
+      for (let i = 0; i < 50; i++) {
+        particles.push({
+          x, y,
+          radius: Math.random() * 3 + 2,
+          color,
+          speed: Math.random() * 7 + 2,
+          direction: Math.random() * Math.PI * 2,
+          alpha: 1
+        })
+      }
+    }
+
+    function updateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      particles.forEach((p, i) => {
+        p.x += Math.cos(p.direction) * p.speed
+        p.y += Math.sin(p.direction) * p.speed
+        p.alpha -= 0.02
+        p.radius *= 0.97
+        if (p.alpha <= 0) particles.splice(i, 1)
+        else {
+          ctx.beginPath()
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2)
+          ctx.fillStyle = `rgba(${p.color}, ${p.alpha})`
+          ctx.fill()
+        }
+      })
+      requestAnimationFrame(updateParticles)
+    }
+    updateParticles()
+
+    function animasiButton(event) {
+      const x = event.clientX
+      const y = event.clientY
+      const colors = ["255,0,102", "0,255,255", "255,255,0", "255,105,180"]
+      const randomColor = colors[Math.floor(Math.random() * colors.length)]
+      createFirework(x, y, randomColor)
+      const aura = document.createElement("div")
+      aura.classList.add("aura")
+      aura.style.left = `${x - 25}px`
+      aura.style.top = `${y - 25}px`
+      aura.style.width = "50px"
+      aura.style.height = "50px"
+      aura.style.background = `radial-gradient(circle, rgba(${randomColor}, 0.8) 0%, transparent 70%)`
+      document.body.appendChild(aura)
+      setTimeout(() => aura.remove(), 800)
+      anime({
+        targets: event.target,
+        scale: [1, 1.3, 1],
+        duration: 700,
+        easing: "easeOutElastic(1, .6)"
+      })
+    }
+
+    function contohVariabel() {
+      let nama = "Michael"
+      const umur = 21
+      var aktif = true
+      alert(`Nama: ${nama}\nUmur: ${umur}\nAktif: ${aktif}`)
+    }
+
+    function cekNilai() {
+      const nilai = prompt("Masukkan Nilai Kamu:")
+      if (nilai > 75) alert("Lulus! Power level meningkat!!")
+      else alert("Bro is cooked... tapi jangan menyerah!")
+    }
+
+    function tampilArray() {
+      const buah = ["Apel", "Jeruk", "Mangga", "Pisang"]
+      alert("Daftar buah:\n" + buah.join(", "))
+    }
+
+    function hitung(operasi) {
+      const a = parseFloat(document.getElementById("angka1").value)
+      const b = parseFloat(document.getElementById("angka2").value)
+      const hasil = document.getElementById("hasil")
+      let teks = ""
+      if (isNaN(a) || isNaN(b)) teks = "Masukkan dua angka dulu!"
+      else {
+        if (operasi === "tambah") teks = `Hasil: ${a + b}`
+        else if (operasi === "kurang") teks = `Hasil: ${a - b}`
+        else if (operasi === "kali") teks = `Hasil: ${a * b}`
+        else if (operasi === "bagi") teks = b !== 0 ? `Hasil: ${a / b}` : "Tidak bisa bagi 0!"
+      }
+      hasil.textContent = teks
+      anime({
+        targets: "#hasil",
+        scale: [0, 1.2, 1],
+        opacity: [0, 1],
+        duration: 800,
+        easing: "easeOutElastic(1, .5)"
+      })
+      createFirework(window.innerWidth / 2, window.innerHeight / 2, "0,255,255")
+    }
+
+    function animateCircle() {
+      const circle = document.getElementById("circle")
+      const colors = ["#4f46e5", "#ec4899", "#22d3ee", "#eab308"]
+      const randomColor = colors[Math.floor(Math.random() * colors.length)]
+      const maxTranslate = (window.innerWidth - 100) / 2
+      const randomDistance = (Math.random() * maxTranslate * (Math.random() < 0.5 ? 1 : -1))
+      
+      anime({
+        targets: circle,
+        translateX: randomDistance,
+        backgroundColor: randomColor,
+        duration: 700,
+        easing: "easeInOutQuad"
+      })
+    }
+
+    let counterValue = 0
+    function updateCounter(operation) {
+      const counter = document.getElementById("counter")
+      if (operation === "tambah") counterValue++
+      else if (operation === "kurang") counterValue--
+      counter.textContent = counterValue
+      anime({
+        targets: counter,
+        scale: [1, 1.2, 1],
+        duration: 500,
+        easing: "easeOutElastic(1, .6)"
+      })
+    }
+  </script>
+</body>
+</html>
